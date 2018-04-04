@@ -3,16 +3,19 @@ import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
-import toggleModal from '../redux/actions/modalActions';
 import Modal from './Modal';
+import AddFactoryForm from './Forms/AddFactoryForm';
+import toggleModal from '../redux/actions/modalActions';
+
+const handleSubmit = (values) => {
+  console.log('here', values);
+};
 
 const RootNodeContainer = (props) => {
   const {
     onToggleModal,
     modalIsOpen,
   } = props;
-
-  console.log(modalIsOpen);
 
   return (
     <div>
@@ -32,7 +35,9 @@ const RootNodeContainer = (props) => {
         modalIsOpen={modalIsOpen}
         onCloseModal={onToggleModal(modalIsOpen)}
       >
-        <div>hellothere</div>
+        <AddFactoryForm
+          onSubmit={handleSubmit}
+        />
       </Modal>
     </div>
   );
