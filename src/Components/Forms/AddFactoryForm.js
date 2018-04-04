@@ -23,6 +23,7 @@ const AddFactoryForm = (props) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <h4 className="text-color-heading">Add a factory node</h4>
       <MuiThemeProvider>
         <Field
           name="factory"
@@ -30,7 +31,7 @@ const AddFactoryForm = (props) => {
           placeholder="Factory Name"
           component={Input}
         />
-        <div>
+        <div className="margin-top-10">
           <RaisedButton
             onClick={handleSubmit}
             label="Submit"

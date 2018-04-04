@@ -1,21 +1,37 @@
 import React from 'react';
+import uuid from 'uuid';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
-import Modal from './Modal';
-import AddFactoryForm from './Forms/AddFactoryForm';
-import toggleModal from '../redux/actions/modalActions';
+import Modal from '../Modal';
+import AddFactoryForm from '../Forms/AddFactoryForm';
+import toggleModal from '../../redux/actions/modalActions';
+import { addFactory } from '../../redux/actions/nodeActions';
 
-const handleSubmit = (values) => {
-  console.log('here', values);
-};
+/**
+ * Factory function to return wrapped dispatched function
+ * @param {Object} props - RootNodeContainer props
+ * @return {Object}
+ */
+const nodeFactory = props => ({
+  handleSubmit: ({ factory: name }) => {
+    props.onAddFactory({
+      id: uuid.v4(),
+      name,
+    });
+    props.onToggleModal(props.modalIsOpen)();
+  },
+});
 
 const RootNodeContainer = (props) => {
   const {
     onToggleModal,
     modalIsOpen,
+    onAddFactory,
   } = props;
+
+  const nodeFactoryObject = nodeFactory(props);
 
   return (
     <div>
@@ -36,7 +52,8 @@ const RootNodeContainer = (props) => {
         onCloseModal={onToggleModal(modalIsOpen)}
       >
         <AddFactoryForm
-          onSubmit={handleSubmit}
+          onToggleModal={onToggleModal(modalIsOpen)}
+          onSubmit={nodeFactoryObject.handleSubmit}
         />
       </Modal>
     </div>
@@ -45,6 +62,7 @@ const RootNodeContainer = (props) => {
 
 const mapDispatchToProps = dispatch => ({
   onToggleModal: modalState => () => dispatch(toggleModal(modalState)),
+  onAddFactory: factory => dispatch(addFactory(factory)),
 });
 
 const mapStateToProps = state => ({

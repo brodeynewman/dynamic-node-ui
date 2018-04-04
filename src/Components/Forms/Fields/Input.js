@@ -19,8 +19,8 @@ const Input = ({
         {
           touched &&
           (
-            (error && <span>{error}</span>) ||
-            (warning && <span>{warning}</span>)
+            (error && <span className="text-color-firebrick">{error}</span>) ||
+            (warning && <span className="text-color-goldenrod">{warning}</span>)
           )
         }
       </div>

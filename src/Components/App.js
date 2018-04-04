@@ -1,9 +1,9 @@
 import React from 'react';
-import RootNode from './RootNode';
-import FactoryContainer from './FactoryContainer';
+import RootNode from './Node/RootNode';
+import FactoryContainer from './Factory/FactoryContainer';
 
 const App = () => (
-  <div>
+  <div style={{ fontFamily: 'Khula sans-serif' }}>
     <RootNode />
     <FactoryContainer />
   </div>
