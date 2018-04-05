@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import React from 'react';
-import FA from 'react-fontawesome';
 import { connect } from 'react-redux';
 import IconButton from 'material-ui/IconButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import FactoryMenu from './FactoryMenu';
+import Modal from '../Modal';
+import AddChildrenForm from '../Forms/AddChildrenForm';
 import { editFactory, removeFactory } from '../../redux/actions/nodeActions';
 
 class Factory extends React.Component {
@@ -12,15 +14,18 @@ class Factory extends React.Component {
     super(props);
 
     this.state = {
-      editValue: props.name,
+      editValue: props.factoryDetails.name,
       isEditing: false,
       isPopoverOpen: false,
+      isModalOpen: false,
     };
 
     this.handleEditChange = this.handleEditChange.bind(this);
     this.toggleIsEditing = this.toggleIsEditing.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleIsPopoverOpen = this.handleIsPopoverOpen.bind(this);
+    this.toggleIsModalOpen = this.toggleIsModalOpen.bind(this);
+    this.handleAddChildrenFormSubmit = this.handleAddChildrenFormSubmit.bind(this);
   }
 
   handleEditChange({ target }) {
@@ -35,23 +40,38 @@ class Factory extends React.Component {
     return this.setState(prevState => ({ isEditing: !prevState.isEditing }));
   }
 
+  toggleIsModalOpen() {
+    return this.setState(prevState => ({ isModalOpen: !prevState.isModalOpen }));
+  }
+
   handleSubmit(e) {
     e.preventDefault();
 
     const { editValue } = this.state;
-    const { id, editFactoryNode } = this.props;
+    const { editFactoryNode } = this.props;
+    const { id } = this.props.factoryDetails;
 
     editFactoryNode(id, editValue);
     this.toggleIsEditing();
+  }
+
+  handleAddChildrenFormSubmit(values) {
+    console.log('here', values);
+    this.toggleIsModalOpen();
   }
 
   render() {
     const {
       id,
       name,
-      removeFactory,
-    } = this.props;
-    const { editValue, isEditing, isPopoverOpen } = this.state;
+    } = this.props.factoryDetails;
+    const { removeFactory } = this.props;
+    const {
+      editValue,
+      isEditing,
+      isPopoverOpen,
+      isModalOpen,
+    } = this.state;
 
     return (
       <MuiThemeProvider>
@@ -90,25 +110,20 @@ class Factory extends React.Component {
           >
             <MoreVertIcon />
           </IconButton>
-          <span className={`${isPopoverOpen ? 'node-menu-show' : 'node-menu-hide'} margin-left-5 border-solid-light display-flex node-menu`}>
-            <span className="pad-left-10 cursor-pointer pad-box-light text-color-material-green display-flex justify-content-center align-items-center ">
-              <FA
-                className="text-color-material-green"
-                name="fas fa-plus"
-              />
-            </span>
-            <span
-              role="presentation"
-              onKeyPress={removeFactory(id)}
-              onClick={removeFactory(id)}
-              className="cursor-pointer pad-box-light display-flex justify-content-center align-items-center "
-            >
-              <FA
-                className="text-color-material-green cursor-pointer pad-box-light"
-                name="fas fa-trash"
-              />
-            </span>
-          </span>
+          <FactoryMenu
+            isPopoverOpen={isPopoverOpen}
+            onRemoveFactory={removeFactory(id)}
+            onToggleIsModalOpen={this.toggleIsModalOpen}
+          />
+          <Modal
+            modalIsOpen={isModalOpen}
+            onCloseModal={this.toggleIsModalOpen}
+          >
+            <AddChildrenForm
+              onSubmit={this.handleAddChildrenFormSubmit}
+              {...this.props.factoryDetails}
+            />
+          </Modal>
         </div>
       </MuiThemeProvider>
     );

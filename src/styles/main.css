@@ -33,6 +33,9 @@ h1, h2, h3, h4, h5, p, span {
   border-radius: 3px;
 };
 
+/** Width */
+.width-full { width: 100%; }
+
 /** Text Colors */
 .text-color-material-green { color: #4CAF50; }
 .text-color-heading { color: #666; }

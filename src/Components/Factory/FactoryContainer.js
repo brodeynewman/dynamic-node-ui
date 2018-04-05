@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Factory from './Factory';
 
-const mapFactories = fp.map(factory => <Factory {...factory} />);
+const mapFactories = fp.map(factory => <Factory factoryDetails={factory} />);
 
 const FactoryContainer = props => (
   <div className="pad-box">

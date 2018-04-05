@@ -8,8 +8,9 @@ const Input = ({
   meta: { touched, error, warning },
 }) => (
   <div>
-    <div>
+    <div className="width-full">
       <TextField
+        className="width-full"
         {...input}
         placeholder={label}
         type={type}

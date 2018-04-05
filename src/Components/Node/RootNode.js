@@ -20,7 +20,9 @@ const nodeFactory = props => ({
     props.onAddFactory({
       id: uuid.v4(),
       name: _.upperFirst(name),
-      isEditing: false,
+      lowerBound: 0,
+      upperBound: 100000,
+      numberOfChildren: 11,
     });
     props.onToggleModal(props.modalIsOpen)();
   },
