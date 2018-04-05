@@ -28,8 +28,8 @@ const AddFactoryForm = (props) => {
         <Field
           name="factory"
           type="text"
-          placeholder="Factory Name"
           component={Input}
+          label="Name"
         />
         <div className="margin-top-10">
           <RaisedButton

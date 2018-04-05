@@ -3,7 +3,7 @@ import RootNode from './Node/RootNode';
 import FactoryContainer from './Factory/FactoryContainer';
 
 const App = () => (
-  <div style={{ fontFamily: 'Khula sans-serif' }}>
+  <div>
     <RootNode />
     <FactoryContainer />
   </div>

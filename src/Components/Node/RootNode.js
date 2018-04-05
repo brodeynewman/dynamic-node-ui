@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import uuid from 'uuid';
 import { connect } from 'react-redux';
@@ -18,7 +19,8 @@ const nodeFactory = props => ({
   handleSubmit: ({ factory: name }) => {
     props.onAddFactory({
       id: uuid.v4(),
-      name,
+      name: _.upperFirst(name),
+      isEditing: false,
     });
     props.onToggleModal(props.modalIsOpen)();
   },
@@ -38,7 +40,7 @@ const RootNodeContainer = (props) => {
       <MuiThemeProvider>
         <Toolbar>
           <ToolbarGroup>
-            <ToolbarTitle text="Root Node" />
+            <ToolbarTitle text="Root" />
             <RaisedButton
               label="Add Factory"
               primary

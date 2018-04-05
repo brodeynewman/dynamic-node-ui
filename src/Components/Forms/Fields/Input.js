@@ -8,7 +8,6 @@ const Input = ({
   meta: { touched, error, warning },
 }) => (
   <div>
-    <label>{label}</label>
     <div>
       <TextField
         {...input}

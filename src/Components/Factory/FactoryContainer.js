@@ -5,17 +5,13 @@ import Factory from './Factory';
 
 const mapFactories = fp.map(factory => <Factory {...factory} />);
 
-const FactoryContainer = (props) => {
-  console.log('here', props);
-
-  return (
-    <div>
-      {
-        mapFactories(props.factories)
-      }
-    </div>
-  );
-};
+const FactoryContainer = props => (
+  <div className="pad-box">
+    {
+      mapFactories(props.factories)
+    }
+  </div>
+);
 
 const mapStateToProps = ({ factories }) => ({
   factories,

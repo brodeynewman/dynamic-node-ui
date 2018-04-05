@@ -11,3 +11,13 @@ export function removeFactory(id) {
     payload: id,
   };
 }
+
+export function editFactory(id, newName) {
+  return {
+    type: 'EDIT_FACTORY',
+    payload: {
+      id,
+      newName,
+    },
+  };
+}
