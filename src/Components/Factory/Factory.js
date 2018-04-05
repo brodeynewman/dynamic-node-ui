@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import fp from 'lodash/fp';
 import { connect } from 'react-redux';
 import IconButton from 'material-ui/IconButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -7,7 +8,10 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FactoryMenu from './FactoryMenu';
 import Modal from '../Modal';
 import AddChildrenForm from '../Forms/AddChildrenForm';
-import { editFactory, removeFactory } from '../../redux/actions/nodeActions';
+import { editFactory, removeFactory, addChildren } from '../../redux/actions/nodeActions';
+
+const mapChildren = fp.map(child =>
+  <div className="position-relative child pad-box-light text-color-heading margin-left-75">{child.number}</div>);
 
 class Factory extends React.Component {
   constructor(props) {
@@ -56,7 +60,29 @@ class Factory extends React.Component {
   }
 
   handleAddChildrenFormSubmit(values) {
-    console.log('here', values);
+    const {
+      numberOfChildren,
+      lowerBound,
+      upperBound,
+    } = values;
+    const { addChildren } = this.props;
+    const { id, name } = this.props.factoryDetails;
+
+    const arrayOfChildrenAmount = new Array(Number(numberOfChildren));
+
+    /** Loop through and create a random number */
+    const arrayOfChildren = _.map(arrayOfChildrenAmount, () => ({
+      number: Math.floor(Math.random(Number(lowerBound)) * Number(upperBound)),
+    }));
+
+    addChildren({
+      numberOfChildren,
+      name,
+      id,
+      lowerBound,
+      upperBound,
+      children: arrayOfChildren,
+    });
     this.toggleIsModalOpen();
   }
 
@@ -64,6 +90,7 @@ class Factory extends React.Component {
     const {
       id,
       name,
+      children = [],
     } = this.props.factoryDetails;
     const { removeFactory } = this.props;
     const {
@@ -72,6 +99,8 @@ class Factory extends React.Component {
       isPopoverOpen,
       isModalOpen,
     } = this.state;
+
+    console.log(this.props);
 
     return (
       <MuiThemeProvider>
@@ -100,7 +129,7 @@ class Factory extends React.Component {
                 className="factory-node cursor-pointer"
                 onClick={this.toggleIsEditing}
               >
-                {name}
+                <b>{name}</b>
               </span>
             )
           }
@@ -125,6 +154,11 @@ class Factory extends React.Component {
             />
           </Modal>
         </div>
+        <ul className="pad-box margin-left-10">
+          {
+            mapChildren(children)
+          }
+        </ul>
       </MuiThemeProvider>
     );
   }
@@ -133,6 +167,7 @@ class Factory extends React.Component {
 const mapDispatchToProps = dispatch => ({
   editFactoryNode: (id, newName) => dispatch(editFactory(id, newName)),
   removeFactory: id => () => dispatch(removeFactory(id)),
+  addChildren: node => dispatch(addChildren(node)),
 });
 
 export default connect(_.stubObject, mapDispatchToProps)(Factory);

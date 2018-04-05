@@ -21,3 +21,10 @@ export function editFactory(id, newName) {
     },
   };
 }
+
+export function addChildren(childOptions) {
+  return {
+    type: 'ADD_CHILDREN',
+    payload: childOptions,
+  };
+}

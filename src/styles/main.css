@@ -45,6 +45,7 @@ h1, h2, h3, h4, h5, p, span {
 /** Margin */
 .margin-top-10 { margin-top: 10px; }
 .margin-left-5 { margin-left: 5px; }
+.margin-left-75 { margin-left: 75px; }
 
 /** Padding */
 .pad-box { padding: 15px; }
@@ -85,4 +86,17 @@ h1, h2, h3, h4, h5, p, span {
   opacity: 0;
   visibility: hidden;
   transform: translateX(-100%);
+}
+
+.child:before {
+  content: "";
+  display: block;
+  width: 30px;
+  position: absolute;
+  top: -25px;
+  bottom: 13px;
+  left: -35px;
+  border-left: 2px solid;
+  color: #666;
+  border-bottom: 2px solid #666;
 }

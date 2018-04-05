@@ -14,6 +14,11 @@ export default function factoryReducer(state = [{ name: 'test', id: 1 }], action
         factory.id === action.payload.id
           ? { ...factory, name: action.payload.newName }
           : factory));
+    case 'ADD_CHILDREN':
+      return _.map(state, factory => (
+        factory.id === action.payload.id
+          ? { ...action.payload }
+          : factory));
     default:
       return state;
   }
