@@ -53,10 +53,19 @@ class Factory extends React.Component {
 
     const { editValue } = this.state;
     const { editFactoryNode } = this.props;
-    const { id } = this.props.factoryDetails;
+    const { id, name } = this.props.factoryDetails;
+
+    /**
+     * If a user tries to empty the input,
+     * Reset it to the original value
+     */
+    if (editValue === '') {
+      this.handleEditChange({ target: { value: name } });
+      return this.toggleIsEditing();
+    }
 
     editFactoryNode(id, editValue);
-    this.toggleIsEditing();
+    return this.toggleIsEditing();
   }
 
   handleAddChildrenFormSubmit(values) {
@@ -100,7 +109,7 @@ class Factory extends React.Component {
       isModalOpen,
     } = this.state;
 
-    console.log(this.props);
+    console.log(this.props.factoryDetails);
 
     return (
       <MuiThemeProvider>
@@ -154,7 +163,7 @@ class Factory extends React.Component {
             />
           </Modal>
         </div>
-        <ul className="pad-box margin-left-10">
+        <ul className="pad-box margin-left-10 margin-bottom-0">
           {
             mapChildren(children)
           }

@@ -42,10 +42,15 @@ h1, h2, h3, h4, h5, p, span {
 .text-color-firebrick { color: firebrick; }
 .text-color-goldenrod { color: goldenrod; }
 
+/** Font size */
+.font-size-small { font-size: 11px; }
+
 /** Margin */
 .margin-top-10 { margin-top: 10px; }
 .margin-left-5 { margin-left: 5px; }
 .margin-left-75 { margin-left: 75px; }
+.margin-bottom-0 { margin-bottom: 0px; } 
+.margin-bottom-10 { margin-bottom: 10px; } 
 
 /** Padding */
 .pad-box { padding: 15px; }

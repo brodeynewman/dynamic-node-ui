@@ -83,33 +83,38 @@ class AddFactoryForm extends React.Component {
     return (
       <form onSubmit={handleSubmit}>
         <h4 className="text-color-heading">Add children to <b>{name}</b></h4>
-        <MuiThemeProvider>
-          <Field
-            name="numberOfChildren"
-            type="text"
-            component={Input}
-            label="15"
-          />
-          <Field
-            name="lowerBound"
-            type="text"
-            component={Input}
-            label="0"
-          />
-          <Field
-            name="upperBound"
-            type="text"
-            component={Input}
-            label="1000000"
-          />
-          <div className="margin-top-10">
-            <RaisedButton
-              onClick={handleSubmit}
-              label="Submit"
-              primary
+        <div className="margin-top-10">
+          <MuiThemeProvider>
+            <span className="font-size-small">Number of children</span>
+            <Field
+              name="numberOfChildren"
+              type="text"
+              component={Input}
+              label="15"
             />
-          </div>
-        </MuiThemeProvider>
+            <span className="font-size-small">Lower bound</span>
+            <Field
+              name="lowerBound"
+              type="text"
+              component={Input}
+              label="0"
+            />
+            <span className="font-size-small">Upper bound</span>
+            <Field
+              name="upperBound"
+              type="text"
+              component={Input}
+              label="1000000"
+            />
+            <div className="margin-top-10">
+              <RaisedButton
+                onClick={handleSubmit}
+                label="Submit"
+                primary
+              />
+            </div>
+          </MuiThemeProvider>
+        </div>
       </form>
     );
   }
