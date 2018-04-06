@@ -1,10 +1,13 @@
 import _ from 'lodash';
+import uuid from 'uuid';
 import React from 'react';
 import fp from 'lodash/fp';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import IconButton from 'material-ui/IconButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import Child from './Child';
 import Modal from '../Modal';
 import io from '../../socket';
 import FactoryMenu from './FactoryMenu';
@@ -14,9 +17,16 @@ import {
   updateFactoryWithSocket,
 } from '../../redux/actions/factoryActions';
 
-const mapChildren = fp.map(child =>
-  <div className="position-relative child pad-box-light text-color-heading margin-left-75">{child.number}</div>);
+/**
+ * Maps children to a child div
+ * @returns {array}
+ */
+const mapChildren = fp.map(({ number, id }) => <Child key={id} number={number} />);
 
+/**
+ * Factory Component
+ * @extends {React.Component}
+ */
 class Factory extends React.Component {
   constructor(props) {
     super(props);
@@ -29,29 +39,51 @@ class Factory extends React.Component {
     };
 
     this.handleEditChange = this.handleEditChange.bind(this);
-    this.toggleIsEditing = this.toggleIsEditing.bind(this);
+    this.handleToggleIsEditing = this.handleToggleIsEditing.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleIsPopoverOpen = this.handleIsPopoverOpen.bind(this);
-    this.toggleIsModalOpen = this.toggleIsModalOpen.bind(this);
+    this.handleToggleIsModalOpen = this.handleToggleIsModalOpen.bind(this);
     this.handleAddChildrenFormSubmit = this.handleAddChildrenFormSubmit.bind(this);
   }
 
+  /**
+   * Sets the target value of the factory name
+   * @param {Object} target - event target
+   * @returns {void}
+   */
   handleEditChange({ target }) {
     return this.setState({ editValue: target.value });
   }
 
+  /**
+   * Toggles the state of the edit/delete popover
+   * @returns {void}
+   */
   handleIsPopoverOpen() {
     return this.setState(prevState => ({ isPopoverOpen: !prevState.isPopoverOpen }));
   }
 
-  toggleIsEditing() {
+  /**
+   * Toggles the "isEditing" state for factory name edit
+   * @returns {void}
+   */
+  handleToggleIsEditing() {
     return this.setState(prevState => ({ isEditing: !prevState.isEditing }));
   }
 
-  toggleIsModalOpen() {
+  /**
+   * Toggles the modal state
+   * @returns {void}
+   */
+  handleToggleIsModalOpen() {
     return this.setState(prevState => ({ isModalOpen: !prevState.isModalOpen }));
   }
 
+  /**
+   * Handles the "Add Factory" form submission
+   * @param {Object} e - event object
+   * @returns {void}
+   */
   handleSubmit(e) {
     e.preventDefault();
 
@@ -65,13 +97,18 @@ class Factory extends React.Component {
      */
     if (editValue === '') {
       this.handleEditChange({ target: { value: name } });
-      return this.toggleIsEditing();
+      return this.handleToggleIsEditing();
     }
 
     editFactoryNode(io, _.assign(factoryDetails, { name: editValue }));
-    return this.toggleIsEditing();
+    return this.handleToggleIsEditing();
   }
 
+  /**
+   * Handles the children adding / editing
+   * @param {Object} values - the form values from the "Edit Factory" modal
+   * @returns {void}
+   */
   handleAddChildrenFormSubmit(values) {
     const {
       numberOfChildren,
@@ -85,6 +122,7 @@ class Factory extends React.Component {
 
     /** Loop through and create a random number */
     const arrayOfChildren = _.map(arrayOfChildrenAmount, () => ({
+      id: uuid.v4(),
       number: Math.floor(Math.random(Number(lowerBound)) * Number(upperBound)),
     }));
 
@@ -96,7 +134,7 @@ class Factory extends React.Component {
       upperBound,
       children: arrayOfChildren,
     });
-    this.toggleIsModalOpen();
+    return this.handleToggleIsModalOpen();
   }
 
   render() {
@@ -117,8 +155,8 @@ class Factory extends React.Component {
       <MuiThemeProvider>
         <div
           role="presentation"
-          onKeyPress={this.toggleIsEditing}
-          onClick={this.toggleIsEditing}
+          onKeyPress={this.handleToggleIsEditing}
+          onClick={this.handleToggleIsEditing}
           className={`${isEditing ? 'display-block' : 'display-none'} menu-overlay`}
         />
         <div className="pad-box-light display-flex align-items-center">
@@ -136,9 +174,9 @@ class Factory extends React.Component {
             ) : (
               <span
                 role="presentation"
-                onKeyPress={this.toggleIsEditing}
+                onKeyPress={this.handleToggleIsEditing}
                 className="factory-node cursor-pointer"
-                onClick={this.toggleIsEditing}
+                onClick={this.handleToggleIsEditing}
               >
                 <b>{name}</b>
               </span>
@@ -153,11 +191,11 @@ class Factory extends React.Component {
           <FactoryMenu
             isPopoverOpen={isPopoverOpen}
             onDeleteFactory={deleteFactory(io, _id)}
-            onToggleIsModalOpen={this.toggleIsModalOpen}
+            onToggleIsModalOpen={this.handleToggleIsModalOpen}
           />
           <Modal
             modalIsOpen={isModalOpen}
-            onCloseModal={this.toggleIsModalOpen}
+            onCloseModal={this.handleToggleIsModalOpen}
           >
             <AddChildrenForm
               onSubmit={this.handleAddChildrenFormSubmit}
@@ -174,6 +212,19 @@ class Factory extends React.Component {
     );
   }
 }
+
+Factory.propTypes = {
+  editFactoryNode: PropTypes.func.isRequired,
+  addChildren: PropTypes.func.isRequired,
+  deleteFactory: PropTypes.func.isRequired,
+  factoryDetails: PropTypes.objectOf(PropTypes.shape({
+    _id: PropTypes.string,
+    name: PropTypes.string,
+    children: PropTypes.arrayOf(PropTypes.object),
+    lowerBound: PropTypes.number,
+    upperBound: PropTypes.number,
+  })).isRequired,
+};
 
 const mapDispatchToProps = dispatch => ({
   editFactoryNode: (socketClient, id, newName) =>

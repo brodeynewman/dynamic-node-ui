@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import fp from 'lodash/fp';
 import React from 'react';
+import fp from 'lodash/fp';
+import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -21,25 +21,31 @@ const HIGHEST_NUMBER_BOUND = 100000;
  */
 const validationMapping = {
   numberOfChildren: (errors = {}, value) => {
+    const newErrors = { ...errors };
+
     if (isNaN(value) || Number(value) > 15 || Number(value) < 1) {
-      errors.numberOfChildren = 'Children must be between 0 and 15';
+      newErrors.numberOfChildren = 'Children must be between 0 and 15';
     }
 
-    return errors;
+    return newErrors;
   },
   lowerBound: (errors = {}, value) => {
+    const newErrors = { ...errors };
+
     if (isNaN(value) || Number(value) > HIGHEST_NUMBER_BOUND || Number(value) < LOWEST_NUMBER_BOUND) {
-      errors.lowerBound = `Lower must be between ${LOWEST_NUMBER_BOUND} and ${HIGHEST_NUMBER_BOUND}`;
+      newErrors.lowerBound = `Lower must be between ${LOWEST_NUMBER_BOUND} and ${HIGHEST_NUMBER_BOUND}`;
     }
 
-    return errors;
+    return newErrors;
   },
   upperBound: (errors = {}, value) => {
+    const newErrors = { ...errors };
+
     if (isNaN(value) || Number(value) > HIGHEST_NUMBER_BOUND || Number(value) < LOWEST_NUMBER_BOUND) {
-      errors.upperBound = `Upper must be between ${LOWEST_NUMBER_BOUND} and ${HIGHEST_NUMBER_BOUND}`;
+      newErrors.upperBound = `Upper must be between ${LOWEST_NUMBER_BOUND} and ${HIGHEST_NUMBER_BOUND}`;
     }
 
-    return errors;
+    return newErrors;
   },
 };
 
@@ -57,6 +63,10 @@ const validation = values => fp.compose(
   fp.keys,
 )(values);
 
+/**
+ * AddFactoryForm Component
+ * @extends {React.Component}
+ */
 class AddFactoryForm extends React.Component {
   componentWillMount() {
     const {
@@ -67,16 +77,15 @@ class AddFactoryForm extends React.Component {
     } = this.props;
 
     initialize({
-      numberOfChildren: this.props.numberOfChildren,
-      lowerBound: this.props.lowerBound,
-      upperBound: this.props.upperBound,
+      numberOfChildren,
+      lowerBound,
+      upperBound,
     });
   }
 
   render() {
     const {
       handleSubmit,
-      onSubmit,
       name,
     } = this.props;
 
@@ -119,6 +128,15 @@ class AddFactoryForm extends React.Component {
     );
   }
 }
+
+AddFactoryForm.propTypes = {
+  initialize: PropTypes.func.isRequired,
+  lowerBound: PropTypes.number.isRequired,
+  upperBound: PropTypes.number.isRequired,
+  numberOfChildren: PropTypes.number.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
 export default reduxForm({
   form: 'addFactory',

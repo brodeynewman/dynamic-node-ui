@@ -1,6 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 
+/**
+ * Input stateless Component
+ * @param {Object} input - input props
+ * @param {string} label - input label
+ * @param {string} type - input type
+ * @param {Object} meta - input meta data
+ * @returns {JSX}
+ */
 const Input = ({
   input,
   label,
@@ -27,5 +36,12 @@ const Input = ({
     </div>
   </div>
 );
+
+Input.propTypes = {
+  input: PropTypes.objectOf(PropTypes.any).isRequired,
+  label: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  meta: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 
 export default Input;

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import uuid from 'uuid';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -8,7 +8,6 @@ import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Modal from '../Modal';
 import io from '../../socket';
 import AddFactoryForm from '../Forms/AddFactoryForm';
-import toggleModal from '../../redux/actions/modalActions';
 import { addFactoryWithSocket } from '../../redux/actions/factoryActions';
 
 /**
@@ -25,57 +24,79 @@ const nodeFactory = props => ({
       upperBound: 100000,
       numberOfChildren: 11,
     });
-    props.onToggleModal(props.modalIsOpen)();
+    props.onToggleModal();
   },
 });
 
-const RootNodeContainer = (props) => {
-  const {
-    onToggleModal,
-    modalIsOpen,
-    onAddFactory,
-  } = props;
+/**
+ * RootNodeContainer Component
+ * @extends {React.Component}
+ */
+class RootNodeContainer extends React.Component {
+  constructor(props) {
+    super(props);
 
-  const nodeFactoryObject = nodeFactory(props);
+    this.state = {
+      modalIsOpen: false,
+    };
 
-  return (
-    <div>
-      <MuiThemeProvider>
-        <Toolbar>
-          <ToolbarGroup>
-            <ToolbarTitle text="Root" />
-            <RaisedButton
-              label="Add Factory"
-              primary
-              onClick={onToggleModal(modalIsOpen)}
-            />
-          </ToolbarGroup>
-        </Toolbar>
-      </MuiThemeProvider>
-      <Modal
-        modalIsOpen={modalIsOpen}
-        onCloseModal={onToggleModal(modalIsOpen)}
-      >
-        <AddFactoryForm
-          onToggleModal={onToggleModal(modalIsOpen)}
-          onSubmit={nodeFactoryObject.handleSubmit}
-        />
-      </Modal>
-    </div>
-  );
+    this.handleToggleModalIsOpen = this.handleToggleModalIsOpen.bind(this);
+  }
+
+  /**
+   * Handles the toggling of the "modalIsOpen" state
+   * @returns {void}
+   */
+  handleToggleModalIsOpen() {
+    return this.setState(prevState => ({ modalIsOpen: !prevState.modalIsOpen }));
+  }
+
+  render() {
+    const { modalIsOpen } = this.state;
+
+    const nodeFactoryObject = nodeFactory({
+      ...this.props,
+      onToggleModal: this.handleToggleModalIsOpen,
+    });
+
+    return (
+      <div>
+        <MuiThemeProvider>
+          <Toolbar>
+            <ToolbarGroup>
+              <ToolbarTitle text="Root" />
+              <RaisedButton
+                label="Add Factory"
+                primary
+                onClick={this.handleToggleModalIsOpen}
+              />
+            </ToolbarGroup>
+          </Toolbar>
+        </MuiThemeProvider>
+        <Modal
+          modalIsOpen={modalIsOpen}
+          onCloseModal={this.handleToggleModalIsOpen}
+        >
+          <AddFactoryForm
+            onToggleModal={this.handleToggleModalIsOpen}
+            onSubmit={nodeFactoryObject.handleSubmit}
+          />
+        </Modal>
+      </div>
+    );
+  }
+}
+
+RootNodeContainer.propType = {
+  onAddFactory: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-  onToggleModal: modalState => () => dispatch(toggleModal(modalState)),
   onAddFactory: (socketClient, factory) => dispatch(addFactoryWithSocket(socketClient, factory)),
 });
 
-const mapStateToProps = state => ({
-  modalIsOpen: state.modalIsOpen,
-});
-
 const connectedComponent = connect(
-  mapStateToProps,
+  _.stubObject,
   mapDispatchToProps,
 )(RootNodeContainer);
 

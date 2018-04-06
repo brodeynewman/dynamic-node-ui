@@ -1,6 +1,10 @@
 import React from 'react';
 import Modal from 'react-modal';
+import PropTypes from 'prop-types';
 
+/**
+ * Custom modal styles since Modal takes a style object
+ */
 const customModalStyles = {
   content: {
     top: '50%',
@@ -13,25 +17,40 @@ const customModalStyles = {
   },
 };
 
+/**
+ * ModalComponent stateless Component
+ * @param {Object} props - Component props
+ * @returns {JSX}
+ */
 const ModalComponent = (props) => {
   const {
     modalIsOpen,
-    afterOpenModal,
     onCloseModal,
     customStyles = customModalStyles,
+    children,
   } = props;
 
   return (
     <Modal
       isOpen={modalIsOpen}
-      onAfterOpen={afterOpenModal}
       onRequestClose={onCloseModal}
       style={customStyles}
       contentLabel="Example Modal"
     >
-      {props.children}
+      {children}
     </Modal>
   );
+};
+
+ModalComponent.propTypes = {
+  modalIsOpen: PropTypes.bool.isRequired,
+  onCloseModal: PropTypes.func.isRequired,
+  customStyles: PropTypes.objectOf(PropTypes.any),
+  children: PropTypes.node.isRequired,
+};
+
+ModalComponent.defaultProps = {
+  customStyles: customModalStyles,
 };
 
 export default ModalComponent;

@@ -1,10 +1,16 @@
 import _ from 'lodash';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Input from './Fields/Input';
 
+/**
+ * Handles validation for AddFactoryForm
+ * @param {Object} values - the form values
+ * @returns {Object} errors
+ */
 const validation = (values) => {
   const errors = {};
 
@@ -15,10 +21,14 @@ const validation = (values) => {
   return errors;
 };
 
+/**
+ * AddFactoryForm stateless Component
+ * @param {Object} props - Component props
+ * @returns {JSX}
+ */
 const AddFactoryForm = (props) => {
   const {
     handleSubmit,
-    onSubmit,
   } = props;
 
   return (
@@ -41,6 +51,10 @@ const AddFactoryForm = (props) => {
       </MuiThemeProvider>
     </form>
   );
+};
+
+AddFactoryForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
 };
 
 export default reduxForm({

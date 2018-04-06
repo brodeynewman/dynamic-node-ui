@@ -1,6 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import FA from 'react-fontawesome';
 
+/**
+ * FactoryMenu stateless Component
+ * @param {Object} props - Component props
+ * @returns {JSX}
+ */
 const FactoryMenu = (props) => {
   const { onDeleteFactory, isPopoverOpen, onToggleIsModalOpen } = props;
 
@@ -30,6 +36,12 @@ const FactoryMenu = (props) => {
       </span>
     </span>
   );
+};
+
+FactoryMenu.propTypes = {
+  onDeleteFactory: PropTypes.func.isRequired,
+  isPopoverOpen: PropTypes.bool.isRequired,
+  onToggleIsModalOpen: PropTypes.func.isRequired,
 };
 
 export default FactoryMenu;

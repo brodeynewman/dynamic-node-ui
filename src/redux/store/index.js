@@ -2,6 +2,9 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import rootReducer from '../reducers';
 
+/**
+ * Creates store with middleware
+ */
 export default createStore(
   rootReducer,
   applyMiddleware(thunk),

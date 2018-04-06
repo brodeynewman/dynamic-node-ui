@@ -1,5 +1,10 @@
 import _ from 'lodash';
 
+/**
+ * Reduces the factory state
+ * @param {array} state - factory array
+ * @param {Object} action - action object with payload
+ */
 export default function factoryReducer(state = [], action) {
   switch (action.type) {
     case 'ADD_FACTORY':

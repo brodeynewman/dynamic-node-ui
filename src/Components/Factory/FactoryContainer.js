@@ -1,5 +1,6 @@
 import React from 'react';
 import fp from 'lodash/fp';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Factory from './Factory';
 import io from '../../socket';
@@ -10,24 +11,25 @@ import {
   deleteFactory,
 } from '../../redux/actions/factoryActions';
 
-const mapFactories = fp.map(factory => <Factory key={factory.id} factoryDetails={factory} />);
+/**
+ * Maps factory objects to Factory Components
+ * @returns {array}
+ */
+const mapFactories = fp.map(factory => <Factory key={factory._id} factoryDetails={factory} />);
 
+/**
+ * Factory Container Component
+ * @extends {React.Component}
+ */
 class FactoryContainer extends React.Component {
   componentDidMount() {
-    const {
-      addAllFactories,
-      addFactory,
-      editFactory,
-      deleteFactory,
-    } = this.props;
-
     // Emit a dummy message to get all factories
     io.emit('allFactories', '');
 
-    io.on('allFactories', addAllFactories);
-    io.on('factoryAdded', addFactory);
-    io.on('factoryUpdated', editFactory);
-    io.on('factoryDeleted', deleteFactory);
+    io.on('allFactories', this.props.addAllFactories);
+    io.on('factoryAdded', this.props.addFactory);
+    io.on('factoryUpdated', this.props.editFactory);
+    io.on('factoryDeleted', this.props.deleteFactory);
   }
 
   render() {
@@ -42,6 +44,14 @@ class FactoryContainer extends React.Component {
     );
   }
 }
+
+FactoryContainer.propTypes = {
+  factories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  addAllFactories: PropTypes.func.isRequired,
+  addFactory: PropTypes.func.isRequired,
+  editFactory: PropTypes.func.isRequired,
+  deleteFactory: PropTypes.func.isRequired,
+};
 
 const mapDispatchToProps = dispatch => ({
   addAllFactories: factories => dispatch(addAllFactories(factories)),
