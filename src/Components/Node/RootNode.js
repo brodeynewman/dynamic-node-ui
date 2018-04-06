@@ -8,7 +8,7 @@ import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Modal from '../Modal';
 import AddFactoryForm from '../Forms/AddFactoryForm';
 import toggleModal from '../../redux/actions/modalActions';
-import { addFactory } from '../../redux/actions/nodeActions';
+import { addFactory } from '../../redux/actions/factoryActions';
 
 /**
  * Factory function to return wrapped dispatched function

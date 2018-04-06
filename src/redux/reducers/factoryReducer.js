@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export default function factoryReducer(state = [{ name: 'test', id: 1 }], action) {
+export default function factoryReducer(state = [], action) {
   switch (action.type) {
     case 'ADD_FACTORY':
       return [
@@ -8,7 +8,7 @@ export default function factoryReducer(state = [{ name: 'test', id: 1 }], action
         action.payload,
       ];
     case 'REMOVE_FACTORY':
-      return _.filter(state, factory => factory.id !== action.payload);
+      return _.filter(state, factory => factory._id !== action.payload);
     case 'EDIT_FACTORY':
       return _.map(state, factory => (
         factory.id === action.payload.id
@@ -19,6 +19,8 @@ export default function factoryReducer(state = [{ name: 'test', id: 1 }], action
         factory.id === action.payload.id
           ? { ...action.payload }
           : factory));
+    case 'ADD_ALL_FACTORIES':
+      return action.payload;
     default:
       return state;
   }

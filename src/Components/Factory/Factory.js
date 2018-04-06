@@ -8,7 +8,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FactoryMenu from './FactoryMenu';
 import Modal from '../Modal';
 import AddChildrenForm from '../Forms/AddChildrenForm';
-import { editFactory, removeFactory, addChildren } from '../../redux/actions/nodeActions';
+import { editFactory, removeFactory, addChildren } from '../../redux/actions/factoryActions';
 
 const mapChildren = fp.map(child =>
   <div className="position-relative child pad-box-light text-color-heading margin-left-75">{child.number}</div>);
@@ -97,7 +97,7 @@ class Factory extends React.Component {
 
   render() {
     const {
-      id,
+      _id,
       name,
       children = [],
     } = this.props.factoryDetails;
@@ -150,7 +150,7 @@ class Factory extends React.Component {
           </IconButton>
           <FactoryMenu
             isPopoverOpen={isPopoverOpen}
-            onRemoveFactory={removeFactory(id)}
+            onRemoveFactory={removeFactory(_id)}
             onToggleIsModalOpen={this.toggleIsModalOpen}
           />
           <Modal

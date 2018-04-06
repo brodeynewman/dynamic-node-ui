@@ -28,3 +28,13 @@ export function addChildren(childOptions) {
     payload: childOptions,
   };
 }
+
+/**
+ * Async actinos
+ */
+export function addAllFactories(factories) {
+  return {
+    type: 'ADD_ALL_FACTORIES',
+    payload: factories,
+  };
+}
