@@ -1,7 +1,6 @@
 import io from 'socket.io-client';
-import SOCKET_CONNECTION from './socketConfig';
 
 // Building inital sock connection
-const socket = io.connect(SOCKET_CONNECTION);
+const socket = io.connect(process.env.SOCKET_CONNECTION || 'http://localhost:8008');
 
 export default socket;
