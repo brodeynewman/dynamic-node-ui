@@ -23,17 +23,22 @@ const validationMapping = {
   numberOfChildren: (errors = {}, value) => {
     const newErrors = { ...errors };
 
-    if (isNaN(value) || Number(value) > 15 || Number(value) < 1) {
+    if (isNaN(value) || Number(value) > 15 || Number(value) < 0) {
       newErrors.numberOfChildren = 'Children must be between 0 and 15';
     }
 
     return newErrors;
   },
-  lowerBound: (errors = {}, value) => {
+  lowerBound: (errors = {}, value, formValues) => {
     const newErrors = { ...errors };
+    const { lowerBound, upperBound } = formValues;
 
     if (isNaN(value) || Number(value) > HIGHEST_NUMBER_BOUND || Number(value) < LOWEST_NUMBER_BOUND) {
       newErrors.lowerBound = `Lower must be between ${LOWEST_NUMBER_BOUND} and ${HIGHEST_NUMBER_BOUND}`;
+    }
+
+    if (Number(upperBound) < Number(lowerBound)) {
+      newErrors.lowerBound = `Lower number must be greater than ${upperBound !== '' ? upperBound : 'Upper'}`;
     }
 
     return newErrors;
@@ -59,7 +64,7 @@ const validation = values => fp.compose(
     ...acc,
     ...curr,
   }), {}),
-  fp.map(formKey => validationMapping[formKey]({}, values[formKey])),
+  fp.map(formKey => validationMapping[formKey]({}, values[formKey], values)),
   fp.keys,
 )(values);
 

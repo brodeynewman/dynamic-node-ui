@@ -19,7 +19,7 @@ const nodeFactory = props => ({
   handleSubmit: ({ factory: name }) => {
     // Passing in the socket client as well
     props.onAddFactory(io, {
-      name: _.upperFirst(name),
+      name,
       lowerBound: 0,
       upperBound: 100000,
       numberOfChildren: 11,

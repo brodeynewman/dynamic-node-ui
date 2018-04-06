@@ -23,6 +23,9 @@ import {
  */
 const mapChildren = fp.map(({ number, id }) => <Child key={id} number={number} />);
 
+const generateRandomNumber = (minNum, maxNum) =>
+  Math.floor(Math.random() * ((maxNum - minNum) + 1)) + minNum;
+
 /**
  * Factory Component
  * @extends {React.Component}
@@ -123,7 +126,7 @@ class Factory extends React.Component {
     /** Loop through and create a random number */
     const arrayOfChildren = _.map(arrayOfChildrenAmount, () => ({
       id: uuid.v4(),
-      number: Math.floor(Math.random(Number(lowerBound)) * Number(upperBound)),
+      number: generateRandomNumber(Number(lowerBound), Number(upperBound)),
     }));
 
     addChildren(io, {
