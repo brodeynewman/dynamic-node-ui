@@ -4,7 +4,8 @@
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "max-len": 0,
     "jsx-a11y/no-autofocus": 0,
-    "no-restricted-globals": 0
+    "no-restricted-globals": 0,
+    "no-underscore-dangle": 0
   },
   "env": {
     "browser": true,

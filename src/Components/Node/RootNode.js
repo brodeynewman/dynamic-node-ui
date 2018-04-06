@@ -6,9 +6,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Modal from '../Modal';
+import io from '../../socket';
 import AddFactoryForm from '../Forms/AddFactoryForm';
 import toggleModal from '../../redux/actions/modalActions';
-import { addFactory } from '../../redux/actions/factoryActions';
+import { addFactoryWithSocket } from '../../redux/actions/factoryActions';
 
 /**
  * Factory function to return wrapped dispatched function
@@ -17,8 +18,8 @@ import { addFactory } from '../../redux/actions/factoryActions';
  */
 const nodeFactory = props => ({
   handleSubmit: ({ factory: name }) => {
-    props.onAddFactory({
-      id: uuid.v4(),
+    // Passing in the socket client as well
+    props.onAddFactory(io, {
       name: _.upperFirst(name),
       lowerBound: 0,
       upperBound: 100000,
@@ -66,7 +67,7 @@ const RootNodeContainer = (props) => {
 
 const mapDispatchToProps = dispatch => ({
   onToggleModal: modalState => () => dispatch(toggleModal(modalState)),
-  onAddFactory: factory => dispatch(addFactory(factory)),
+  onAddFactory: (socketClient, factory) => dispatch(addFactoryWithSocket(socketClient, factory)),
 });
 
 const mapStateToProps = state => ({

@@ -10,13 +10,14 @@ export default function factoryReducer(state = [], action) {
     case 'REMOVE_FACTORY':
       return _.filter(state, factory => factory._id !== action.payload);
     case 'EDIT_FACTORY':
+      console.log(action);
       return _.map(state, factory => (
-        factory.id === action.payload.id
-          ? { ...factory, name: action.payload.newName }
+        factory._id === action.payload._id
+          ? { ...action.payload }
           : factory));
     case 'ADD_CHILDREN':
       return _.map(state, factory => (
-        factory.id === action.payload.id
+        factory._id === action.payload.id
           ? { ...action.payload }
           : factory));
     case 'ADD_ALL_FACTORIES':

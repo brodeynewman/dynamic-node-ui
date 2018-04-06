@@ -5,10 +5,11 @@ import { connect } from 'react-redux';
 import IconButton from 'material-ui/IconButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import FactoryMenu from './FactoryMenu';
 import Modal from '../Modal';
+import io from '../../socket';
+import FactoryMenu from './FactoryMenu';
 import AddChildrenForm from '../Forms/AddChildrenForm';
-import { editFactory, removeFactory, addChildren } from '../../redux/actions/factoryActions';
+import { updateFactoryWithSocket, removeFactory, addChildren } from '../../redux/actions/factoryActions';
 
 const mapChildren = fp.map(child =>
   <div className="position-relative child pad-box-light text-color-heading margin-left-75">{child.number}</div>);
@@ -52,8 +53,8 @@ class Factory extends React.Component {
     e.preventDefault();
 
     const { editValue } = this.state;
-    const { editFactoryNode } = this.props;
-    const { id, name } = this.props.factoryDetails;
+    const { editFactoryNode, factoryDetails } = this.props;
+    const { name } = this.props.factoryDetails;
 
     /**
      * If a user tries to empty the input,
@@ -64,7 +65,7 @@ class Factory extends React.Component {
       return this.toggleIsEditing();
     }
 
-    editFactoryNode(id, editValue);
+    editFactoryNode(io, _.assign(factoryDetails, { name: editValue }));
     return this.toggleIsEditing();
   }
 
@@ -75,7 +76,7 @@ class Factory extends React.Component {
       upperBound,
     } = values;
     const { addChildren } = this.props;
-    const { id, name } = this.props.factoryDetails;
+    const { _id, name } = this.props.factoryDetails;
 
     const arrayOfChildrenAmount = new Array(Number(numberOfChildren));
 
@@ -84,10 +85,10 @@ class Factory extends React.Component {
       number: Math.floor(Math.random(Number(lowerBound)) * Number(upperBound)),
     }));
 
-    addChildren({
+    addChildren(io, {
       numberOfChildren,
       name,
-      id,
+      _id,
       lowerBound,
       upperBound,
       children: arrayOfChildren,
@@ -108,8 +109,6 @@ class Factory extends React.Component {
       isPopoverOpen,
       isModalOpen,
     } = this.state;
-
-    console.log(this.props.factoryDetails);
 
     return (
       <MuiThemeProvider>
@@ -174,9 +173,11 @@ class Factory extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  editFactoryNode: (id, newName) => dispatch(editFactory(id, newName)),
+  editFactoryNode: (socketClient, id, newName) =>
+    dispatch(updateFactoryWithSocket(socketClient, id, newName)),
   removeFactory: id => () => dispatch(removeFactory(id)),
-  addChildren: node => dispatch(addChildren(node)),
+  addChildren: (socketClient, factory) =>
+    dispatch(updateFactoryWithSocket(socketClient, factory)),
 });
 
 export default connect(_.stubObject, mapDispatchToProps)(Factory);
