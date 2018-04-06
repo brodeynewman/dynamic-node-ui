@@ -5,9 +5,9 @@ export function addFactory(factory) {
   };
 }
 
-export function removeFactory(id) {
+export function deleteFactory(id) {
   return {
-    type: 'REMOVE_FACTORY',
+    type: 'DELETE_FACTORY',
     payload: id,
   };
 }
@@ -45,5 +45,11 @@ export function addFactoryWithSocket(client, factory) {
 export function updateFactoryWithSocket(client, factory) {
   return () => {
     client.emit('updateFactory', JSON.stringify(factory));
+  };
+}
+
+export function deleteFactoryWithSocket(client, id) {
+  return () => {
+    client.emit('deleteFactory', id);
   };
 }

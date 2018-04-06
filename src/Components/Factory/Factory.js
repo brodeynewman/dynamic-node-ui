@@ -9,7 +9,10 @@ import Modal from '../Modal';
 import io from '../../socket';
 import FactoryMenu from './FactoryMenu';
 import AddChildrenForm from '../Forms/AddChildrenForm';
-import { updateFactoryWithSocket, removeFactory, addChildren } from '../../redux/actions/factoryActions';
+import {
+  deleteFactoryWithSocket,
+  updateFactoryWithSocket,
+} from '../../redux/actions/factoryActions';
 
 const mapChildren = fp.map(child =>
   <div className="position-relative child pad-box-light text-color-heading margin-left-75">{child.number}</div>);
@@ -102,7 +105,7 @@ class Factory extends React.Component {
       name,
       children = [],
     } = this.props.factoryDetails;
-    const { removeFactory } = this.props;
+    const { deleteFactory } = this.props;
     const {
       editValue,
       isEditing,
@@ -149,7 +152,7 @@ class Factory extends React.Component {
           </IconButton>
           <FactoryMenu
             isPopoverOpen={isPopoverOpen}
-            onRemoveFactory={removeFactory(_id)}
+            onDeleteFactory={deleteFactory(io, _id)}
             onToggleIsModalOpen={this.toggleIsModalOpen}
           />
           <Modal
@@ -175,7 +178,8 @@ class Factory extends React.Component {
 const mapDispatchToProps = dispatch => ({
   editFactoryNode: (socketClient, id, newName) =>
     dispatch(updateFactoryWithSocket(socketClient, id, newName)),
-  removeFactory: id => () => dispatch(removeFactory(id)),
+  deleteFactory: (socketClient, id) =>
+    () => dispatch(deleteFactoryWithSocket(socketClient, id)),
   addChildren: (socketClient, factory) =>
     dispatch(updateFactoryWithSocket(socketClient, factory)),
 });

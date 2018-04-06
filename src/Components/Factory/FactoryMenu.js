@@ -2,7 +2,7 @@ import React from 'react';
 import FA from 'react-fontawesome';
 
 const FactoryMenu = (props) => {
-  const { onRemoveFactory, isPopoverOpen, onToggleIsModalOpen } = props;
+  const { onDeleteFactory, isPopoverOpen, onToggleIsModalOpen } = props;
 
   return (
     <span className={`${isPopoverOpen ? 'node-menu-show' : 'node-menu-hide'} margin-left-5 border-solid-light display-flex node-menu`}>
@@ -19,8 +19,8 @@ const FactoryMenu = (props) => {
       </span>
       <span
         role="presentation"
-        onKeyPress={onRemoveFactory}
-        onClick={onRemoveFactory}
+        onKeyPress={onDeleteFactory}
+        onClick={onDeleteFactory}
         className="cursor-pointer pad-box-light display-flex justify-content-center align-items-center "
       >
         <FA

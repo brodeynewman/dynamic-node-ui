@@ -7,10 +7,9 @@ export default function factoryReducer(state = [], action) {
         ...state,
         action.payload,
       ];
-    case 'REMOVE_FACTORY':
+    case 'DELETE_FACTORY':
       return _.filter(state, factory => factory._id !== action.payload);
     case 'EDIT_FACTORY':
-      console.log(action);
       return _.map(state, factory => (
         factory._id === action.payload._id
           ? { ...action.payload }

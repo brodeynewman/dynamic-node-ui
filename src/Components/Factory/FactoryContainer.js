@@ -3,7 +3,12 @@ import fp from 'lodash/fp';
 import { connect } from 'react-redux';
 import Factory from './Factory';
 import io from '../../socket';
-import { addAllFactories, addFactory, editFactory } from '../../redux/actions/factoryActions';
+import {
+  addAllFactories,
+  addFactory,
+  editFactory,
+  deleteFactory,
+} from '../../redux/actions/factoryActions';
 
 const mapFactories = fp.map(factory => <Factory key={factory.id} factoryDetails={factory} />);
 
@@ -13,6 +18,7 @@ class FactoryContainer extends React.Component {
       addAllFactories,
       addFactory,
       editFactory,
+      deleteFactory,
     } = this.props;
 
     // Emit a dummy message to get all factories
@@ -20,7 +26,8 @@ class FactoryContainer extends React.Component {
 
     io.on('allFactories', addAllFactories);
     io.on('factoryAdded', addFactory);
-    io.on('factoryUpdated', factory => editFactory(factory));
+    io.on('factoryUpdated', editFactory);
+    io.on('factoryDeleted', deleteFactory);
   }
 
   render() {
@@ -39,7 +46,8 @@ class FactoryContainer extends React.Component {
 const mapDispatchToProps = dispatch => ({
   addAllFactories: factories => dispatch(addAllFactories(factories)),
   addFactory: factory => dispatch(addFactory(factory)),
-  editFactory: (id, name) => dispatch(editFactory(id, name)),
+  editFactory: factory => dispatch(editFactory(factory)),
+  deleteFactory: id => dispatch(deleteFactory(id)),
 });
 
 const mapStateToProps = ({ factories }) => ({
