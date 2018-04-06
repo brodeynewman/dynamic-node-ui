@@ -1,5 +1,8 @@
 ### Node ###
 
+# API
+/src/socketConfig.js
+
 # Logs
 logs
 npm-debug.log*
